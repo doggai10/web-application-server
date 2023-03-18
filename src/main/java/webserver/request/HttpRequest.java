@@ -1,9 +1,11 @@
-package webserver;
+package webserver.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.HttpRequestUtils;
 import util.IOUtils;
+import webserver.HttpMethod;
+import webserver.handler.RequestHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,10 +16,9 @@ import java.util.Map;
 
 public class HttpRequest {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
-    private String method;
-    private String path;
     private Map<String, String> headers = new HashMap<>();
     private Map<String, String> params = new HashMap<>();
+    private RequestLine requestLine;
 
     public HttpRequest(InputStream in) throws IOException {
         try {
@@ -25,7 +26,7 @@ public class HttpRequest {
             String line = br.readLine();
             if (line == null) return;
 
-            processRequestLine(line);
+            requestLine = new RequestLine(line);
 
             line = br.readLine();
             while (!line.equals("")) {
@@ -34,39 +35,23 @@ public class HttpRequest {
                 headers.put(tokens[0].trim(), tokens[1].trim());
                 line = br.readLine();
             }
-            if (method.equals("POST")) {
+            if (getMethod().isPost()) {
                 String body = IOUtils.readData(br, Integer.parseInt(headers.get("Content-Length")));
                 params = HttpRequestUtils.parseQueryString(body);
+                return;
             }
+            params = requestLine.getParams();
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
-    private void processRequestLine(String line) {
-        String[] tokens = line.split(" ");
-        method = tokens[0];
-
-        if (method.equals("POST")) {
-            path = tokens[1];
-            return;
-        }
-        int index = tokens[1].indexOf("?");
-        if (index == -1) {
-            path = tokens[1];
-            return;
-        }
-        path = tokens[1].substring(0, index);
-        params = HttpRequestUtils.parseQueryString(tokens[1].substring(index + 1));
-    }
-
-
-    public String getMethod() {
-        return method;
+    public HttpMethod getMethod() {
+        return requestLine.getMethod();
     }
 
     public String getPath() {
-        return path;
+        return requestLine.getPath();
     }
 
     public String getHeader(String name) {
@@ -75,5 +60,9 @@ public class HttpRequest {
 
     public String getParameter(String name) {
         return params.get(name);
+    }
+
+    public boolean isLogin() {
+        return headers.get("Cookie") != null;
     }
 }
