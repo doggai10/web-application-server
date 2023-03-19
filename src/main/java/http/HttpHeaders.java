@@ -7,14 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HttpHeaders {
-
     private static final String CONTENT_LENGTH = "Content-Length";
     private static final Logger log = LoggerFactory.getLogger(HttpHeaders.class);
 
     private Map<String, String> headers = new HashMap<>();
 
     public void add(String header) {
-        log.debug("header :{}", header);
+        log.debug("header : {}", header);
         String[] splitedHeaders = header.split(":");
         headers.put(splitedHeaders[0], splitedHeaders[1].trim());
     }

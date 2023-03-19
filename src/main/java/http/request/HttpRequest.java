@@ -37,7 +37,7 @@ public class HttpRequest {
     }
 
     private HttpHeaders processHeaders(BufferedReader br) throws IOException {
-        this.headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         String line;
         while (!(line = br.readLine()).equals("")) {
             headers.add(line);

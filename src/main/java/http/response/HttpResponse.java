@@ -47,11 +47,11 @@ public class HttpResponse {
         byte[] contents = body.getBytes();
         headers.put("Content-Type", "text/html;charset=utf-8");
         headers.put("Content-Length", contents.length + "");
-        response200Header(body.length());
+        response200Header(contents.length);
         responseBody(contents);
     }
 
-    public void sendRedirect(String redirectUrl) {
+    private void response200Header(int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             processHeaders();
@@ -61,21 +61,22 @@ public class HttpResponse {
         }
     }
 
-    private void response200Header(int lengthOfBodyContent) {
+    private void responseBody(byte[] body) {
         try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.write(body, 0, body.length);
             dos.writeBytes("\r\n");
+            dos.flush();
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
-    private void responseBody(byte[] body) {
+    public void sendRedirect(String redirectUrl) {
         try {
-            dos.write(body, 0, body.length);
-            dos.flush();
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            processHeaders();
+            dos.writeBytes("Location: " + redirectUrl + " \r\n");
+            dos.writeBytes("\r\n");
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -85,7 +86,7 @@ public class HttpResponse {
         try {
             Set<String> keys = headers.keySet();
             for (String key : keys) {
-                dos.writeBytes(key + ": " + headers.get(key) + "\r\n");
+                dos.writeBytes(key + ": " + headers.get(key) + " \r\n");
             }
         } catch (IOException e) {
             log.error(e.getMessage());

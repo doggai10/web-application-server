@@ -6,10 +6,9 @@ import http.response.HttpResponse;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
 
 public class CreateUserController extends AbstractController {
-    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(CreateUserController.class);
 
     @Override
     protected void doPost(HttpRequest request, HttpResponse response) {
