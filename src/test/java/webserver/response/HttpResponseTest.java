@@ -1,5 +1,6 @@
 package webserver.response;
 
+import http.response.HttpResponse;
 import org.junit.Test;
 
 import java.io.File;

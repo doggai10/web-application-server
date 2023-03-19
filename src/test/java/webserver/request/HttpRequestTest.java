@@ -1,8 +1,9 @@
 package webserver.request;
 
+import http.HttpMethod;
+import http.request.HttpRequest;
+import http.response.HttpResponse;
 import org.junit.Test;
-import webserver.HttpMethod;
-import webserver.response.HttpResponse;
 
 import java.io.*;
 

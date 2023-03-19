@@ -1,8 +1,7 @@
-package webserver.response;
+package http.response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.handler.RequestHandler;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -14,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class HttpResponse {
-    private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
     private DataOutputStream dos;
     private Map<String, String> headers = new HashMap<>();
 

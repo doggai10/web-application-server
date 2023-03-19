@@ -1,9 +1,8 @@
 package webserver;
 
+import http.HttpMethod;
+import http.request.RequestLine;
 import org.junit.Test;
-import webserver.request.RequestLine;
-
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -36,7 +35,6 @@ public class RequestLineTest {
         //then
         assertEquals(HttpMethod.GET, line.getMethod());
         assertEquals("/user/create", line.getPath());
-        Map<String, String> params = line.getParams();
-        assertEquals(2, params.size());
+        assertEquals("userId=javajigi&password=pass", line.getQueryString());
     }
 }
